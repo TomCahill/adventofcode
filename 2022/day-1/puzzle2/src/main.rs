@@ -24,11 +24,15 @@ fn main() {
             }
         }
 
-        print!("running_total: {}\n", running_total);
-        for (idx, _) in highest_scores.iter().enumerate() {
-            if highest_scores[idx] < running_total {
+        let mut last: i32 = 0;
+        let mut should_shift: bool = false;
+        for idx in 0..3 {
+            if should_shift {
+                highest_scores[idx] = last;
+            } else if highest_scores[idx] < running_total {
+                last = highest_scores[idx];
                 highest_scores[idx] = running_total;
-                break;
+                should_shift = true;
             }
         }
     }
