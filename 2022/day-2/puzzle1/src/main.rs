@@ -23,12 +23,16 @@ fn map_hand(hand_char: &str) -> HAND {
     }
 }
 
-fn check_score(round: Vec<HAND>) -> i32 {
-    let hand_score = round[1] as i8;
+fn check_score(round: &Vec<HAND>) -> u8 {
+    let hand_score = round[1] as u8;
 
-    let compare = round[0] as i8 - hand_score;
+    let result: u8 = match (round[0], round[1]) {
+        (HAND::ROCK, HAND::PAPER) | (HAND::PAPER, HAND::SCISSORS) | (HAND::SCISSORS, HAND::ROCK) => 6,
+        (HAND::ROCK, HAND::SCISSORS) | (HAND::PAPER, HAND::ROCK) | (HAND::SCISSORS, HAND::PAPER) => 0,
+        _ => 3
+    };
 
-    0
+    hand_score + result
 }
 
 fn main() {
@@ -39,6 +43,8 @@ fn main() {
 
     let lines = BufReader::new(file).lines();
 
+    let mut total = 0;
+
     for line in lines {
         if let Ok(value) = line {
             let round = value
@@ -47,17 +53,11 @@ fn main() {
                 .map(map_hand)
                 .collect::<Vec<_>>();
 
-            check_score(round);
+            let score = check_score(&round);
 
-            // for round in split {
-            // println!("{:?}", split)
-            // }
-
-            // let scores = split
-            //     .map(map_score);
-
-            // println!("{:?}", split);
+            total += score as u32;
         }
-
     }
+
+    println!("The total score was: {}", total);
 }
