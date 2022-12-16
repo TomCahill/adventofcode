@@ -2,6 +2,12 @@ use std::{fs::File, io::{BufReader, BufRead}};
 
 const FILENAME: &str = "../input.txt";
 
+fn char_to_code(c: char) -> u16 {
+    let code = c as u16;
+
+    if code >= 65 && code <= 90 { code - 65 + 27 } else { code - 97 + 1 }
+}
+
 fn main() {
     let file = match File::open(FILENAME) {
         Ok(file) => file,
@@ -14,29 +20,23 @@ fn main() {
 
     for line in lines {
         if let Ok(value) = line {
-            let length = value.len();
-            let half = length / 2;
-
-            let container1 = &value[0..half];
-            let container2 = &value[half..length];
+            let (container1, container2) = value.split_at(value.len() / 2);
 
             let shared: String = container1.chars()
                 .filter(|c| container2.contains(*c))
                 .collect();
 
-            let sharedCount: i32 = shared.chars()
-                .filter(|c| shared.matches(*c).count() < 2)
-                .map(|c| {
-
-                    println!("{} = {:?}", c, c.to_digit(36).unwrap());
-
-                    2
+            let shared_count: u16 = shared.chars()
+                .fold(Vec::new(), |mut acc, c| {
+                    if !acc.contains(&c) { acc.push(c); }
+                    acc
                 })
+                .iter()
+                .copied()
+                .map(char_to_code)
                 .sum();
 
-            println!("{} + {} = {}", container1, container2, sharedCount);
-
-            total += sharedCount;
+            total += shared_count;
         }
     }
 
