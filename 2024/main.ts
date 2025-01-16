@@ -1,18 +1,24 @@
 const day = parseInt(Deno.args.shift() || '') || 'all';
 
-async function run(day: number) {
+export async function run(day: number) {
   console.log(`🎁 Running day: ${day}`);
   const runPath = `${import.meta.dirname}/day-${day}`;
 
-  // Load input for the day
+  // Check to see if the puzzle file exists
+  try {
+    await Deno.stat(`${runPath}/input.txt`);
+  } catch {
+    console.log(`   Skipping day, no input found`);
+    return 0;
+  }
+
   const decoder = new TextDecoder('utf-8');
   const input = (decoder.decode(await Deno.readFile(`${runPath}/input.txt`))).split('\n');
-  
+
   await runPuzzle(`${runPath}`, 1, input);
   await runPuzzle(`${runPath}`, 2, input);
 }
-async function runPuzzle(path: string, puzzle: number, input: string[]): Promise<number> {
-
+export async function runPuzzle(path: string, puzzle: number, input: string[]): Promise<number> {
   // Check to see if the puzzle file exists
   try {
     await Deno.stat(`${path}/puzzle${puzzle}/index.ts`);
@@ -33,19 +39,21 @@ async function runPuzzle(path: string, puzzle: number, input: string[]): Promise
   return result;
 }
 
-(async () => {
-  if (!import.meta.dirname) throw new Error('dirname not available');
-  const mainFiles = await Array.fromAsync(Deno.readDir(import.meta.dirname));
-  const days = mainFiles.filter((f) => f.name.match(/day-\d+/)).length;
+if (import.meta.main) {
+  (async () => {
+    if (!import.meta.dirname) throw new Error('dirname not available');
+    const mainFiles = await Array.fromAsync(Deno.readDir(import.meta.dirname));
+    const days = mainFiles.filter((f) => f.name.match(/day-\d+/)).length;
 
-  if (day === 'all') {
-    for (let i = 1; i <= days; i++) {
-      await run(i);
-      console.log(''); // Add a blank line between days
+    if (day === 'all') {
+      for (let i = 1; i <= days; i++) {
+        await run(i);
+        console.log(''); // Add a blank line between days
+      }
+    } else {
+      await run(day);
     }
-  } else {
-    await run(day);
-  }
 
-  console.log('🎄🎄 Happy Code-mas!! 🎄🎄')
-})();
+    console.log('🎄🎄 Happy Code-mas!! 🎄🎄')
+  })();
+}
