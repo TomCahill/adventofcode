@@ -1,4 +1,4 @@
-const day = parseInt(Deno.args.shift() || '') || 'all';
+const day = parseInt(Deno.args.shift() || "") || "all";
 
 export async function run(day: number) {
   console.log(`🎁 Running day: ${day}`);
@@ -12,13 +12,18 @@ export async function run(day: number) {
     return 0;
   }
 
-  const decoder = new TextDecoder('utf-8');
-  const input = (decoder.decode(await Deno.readFile(`${runPath}/input.txt`))).split('\n');
+  const decoder = new TextDecoder("utf-8");
+  const input = (decoder.decode(await Deno.readFile(`${runPath}/input.txt`)))
+    .split("\n");
 
   await runPuzzle(`${runPath}`, 1, input);
   await runPuzzle(`${runPath}`, 2, input);
 }
-export async function runPuzzle(path: string, puzzle: number, input: string[]): Promise<number> {
+export async function runPuzzle(
+  path: string,
+  puzzle: number,
+  input: string[],
+): Promise<number> {
   // Check to see if the puzzle file exists
   try {
     await Deno.stat(`${path}/puzzle${puzzle}/index.ts`);
@@ -30,7 +35,7 @@ export async function runPuzzle(path: string, puzzle: number, input: string[]): 
   const file = await import(`${path}/puzzle${puzzle}/index.ts`);
   const result: unknown = await file.default(input);
 
-  if (typeof result !== 'number') {
+  if (typeof result !== "number") {
     throw new Error(`Puzzle ${puzzle} result is not a number`);
   }
 
@@ -41,19 +46,19 @@ export async function runPuzzle(path: string, puzzle: number, input: string[]): 
 
 if (import.meta.main) {
   (async () => {
-    if (!import.meta.dirname) throw new Error('dirname not available');
+    if (!import.meta.dirname) throw new Error("dirname not available");
     const mainFiles = await Array.fromAsync(Deno.readDir(import.meta.dirname));
     const days = mainFiles.filter((f) => f.name.match(/day-\d+/)).length;
 
-    if (day === 'all') {
+    if (day === "all") {
       for (let i = 1; i <= days; i++) {
         await run(i);
-        console.log(''); // Add a blank line between days
+        console.log(""); // Add a blank line between days
       }
     } else {
       await run(day);
     }
 
-    console.log('🎄🎄 Happy Code-mas!! 🎄🎄')
+    console.log("🎄🎄 Happy Code-mas!! 🎄🎄");
   })();
 }

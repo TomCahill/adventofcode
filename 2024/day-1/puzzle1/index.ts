@@ -2,7 +2,7 @@ export default async function (input: string[]): Promise<number> {
   let distanceTotal = 0;
 
   const split = input.reduce((out: [string[], string[]], item) => {
-    const [l, r] = item.split('  ');
+    const [l, r] = item.split("  ");
     out[0].push(l);
     out[1].push(r);
     return out;

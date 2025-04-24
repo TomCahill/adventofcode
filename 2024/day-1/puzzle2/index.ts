@@ -1,7 +1,7 @@
 export default async function (input: string[]): Promise<number> {
   const leftCol: string[] = [];
-  const split = input.reduce((out: {[key: string]: number}, item) => {
-    const [l, r] = item.split('   ');
+  const split = input.reduce((out: { [key: string]: number }, item) => {
+    const [l, r] = item.split("   ");
     leftCol.push(l);
 
     if (!out[l]) out[l] = 0;

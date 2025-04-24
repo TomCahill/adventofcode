@@ -7,10 +7,10 @@ export default async function (lines: string[]): Promise<number> {
 
   lines.forEach((line) => {
     while (null !== (match = pattern.exec(line))) {
-      if (match[1] === 'do()') {
+      if (match[1] === "do()") {
         enabled = true;
         continue;
-      } else if (match[1] === 'don\'t()') {
+      } else if (match[1] === "don't()") {
         enabled = false;
         continue;
       }

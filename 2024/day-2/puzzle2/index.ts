@@ -2,7 +2,7 @@ export default async function (input: string[]): Promise<number> {
   let safeCount = 0;
 
   input.forEach((line) => {
-    const numbers = line.split(' ').map(Number);
+    const numbers = line.split(" ").map(Number);
 
     if (checkLineSafetyWithTolerance(numbers)) {
       safeCount++;

@@ -1,0 +1,23 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "request": "launch",
+      "name": "Test",
+      "type": "node",
+      "cwd": "${workspaceFolder}",
+      "env": {},
+      "program": "${workspaceFolder}/day-4/puzzle1/index.test.ts",
+      "runtimeExecutable": "/home/tom/.deno/bin/deno",
+      "runtimeArgs": [
+        "test",
+        "--inspect-wait",
+        "--allow-all"
+      ],
+      "attachSimplePort": 9229
+    }
+  ]
+}
