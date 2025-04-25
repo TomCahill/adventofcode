@@ -1,19 +1,19 @@
 export default async function (lines: string[]): Promise<number> {
-  const oneStringToRuleThemAll = lines.join('');
+  const oneStringToRuleThemAll = lines.join("");
   const rows = lines.length;
   const cols = lines[0].length;
 
   const match = "XMAS";
 
   const directions = [
-    [-1, 0], // up
-    [1, 0], // down
-    [0, -1], // left
-    [0, 1], // right
-    [-1, -1], // up left
-    [-1, 1], // up right
-    [1, -1], // down left
-    [1, 1] // down right
+    [0, -1], // top
+    [0, 1], // bottom
+    [-1, 0], // left
+    [1, 0], // right
+    [-1, -1], // top left
+    [1, -1], // top right
+    [-1, 1], // bottom left
+    [1, 1], // bottom right
   ];
 
   let count = 0;
@@ -21,11 +21,22 @@ export default async function (lines: string[]): Promise<number> {
   for (let index = 0; index < oneStringToRuleThemAll.length; index++) {
     if (oneStringToRuleThemAll[index] !== match[0]) continue;
 
-    const x = Math.floor(index / cols);
-    const y = index % cols;
+    const x = index % cols;
+    const y = Math.floor(index / cols);
 
-    for (const [dr, dc] of directions) {
-      if (checkMatchDirection(oneStringToRuleThemAll, match, x, y, dr, dc, rows, cols)) {
+    for (const [dX, dY] of directions) {
+      if (
+        checkMatchDirection(
+          oneStringToRuleThemAll,
+          match,
+          x,
+          y,
+          dX,
+          dY,
+          rows,
+          cols,
+        )
+      ) {
         count++;
       }
     }
@@ -34,13 +45,22 @@ export default async function (lines: string[]): Promise<number> {
   return count;
 }
 
-function checkMatchDirection(str: string, match: string, startRow: number, startCol: number, dr: number, dc: number, rows: number, cols: number): boolean {
+function checkMatchDirection(
+  str: string,
+  match: string,
+  startX: number,
+  startY: number,
+  dX: number,
+  dY: number,
+  rows: number,
+  cols: number,
+): boolean {
   let isValid = true;
   for (let i = 0; i < match.length; i++) {
-    const row = startRow + i * dr;
-    const col = startCol + i * dc;
+    const x = startX + i * dX;
+    const y = startY + i * dY;
 
-    if (!inBounds(row, col, rows, cols) || str[row * cols + col] !== match[i]) {
+    if (!inBounds(x, y, rows, cols) || str[y * cols + x] !== match[i]) {
       isValid = false;
       break;
     }
@@ -49,6 +69,6 @@ function checkMatchDirection(str: string, match: string, startRow: number, start
   return isValid;
 }
 
-function inBounds(r: number, c: number, rows: number, cols: number): boolean {
-  return r >= 0 && r < rows && c >= 0 && c < cols;
+function inBounds(x: number, y: number, rows: number, cols: number): boolean {
+  return y >= 0 && y < rows && x >= 0 && x < cols;
 }
